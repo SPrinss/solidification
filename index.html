@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Solidification</title>
+
+    <!-- meta description -->
+    <meta name="description" content="Storing your ... push">
+
+    <!-- facebook / open graph -->
+    <!-- <meta property="og:title" content="Solidification">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="">
+    <meta property="og:url" content=""> -->
+
+    <!-- twitter -->
+    <!-- <meta name="twitter:card" content="summary"> -->
+    <!--<meta name="twitter:site" content="test">-->
+    <!-- <meta name="twitter:title" content="Solidification"> -->
+    <!-- <meta name="twitter:description" content="Storing your.."> -->
+    <!-- <meta name="twitter:image" content="https://slicesapp.com/images/logo.png"> -->
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- See https://goo.gl/qRE0vM -->
+    <meta name="theme-color" content="#3330cd">
+
+    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+    <!-- <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Solidification"> -->
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <!-- <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Solidification"> -->
+
+    <!-- Homescreen icons -->
+    <!-- <link rel="apple-touch-icon" href="/images/manifest/icon-48x48.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/manifest/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="/images/manifest/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/manifest/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/manifest/icon-192x192.png"> -->
+
+    <!-- Tile icon for Windows 8 (144x144 + tile color) -->
+    <!-- <meta name="msapplication-TileImage" content="/images/manifest/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#3330cd">
+    <meta name="msapplication-tap-highlight" content="no"> -->
+
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="/src/solidification-app/solidification-app.html">
+    <link rel="import" href="/bower_components/polymerfire/firebase-app.html">
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: none;
+      }
+    </style>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-93366011-2"></script> -->
+    <script>
+      // window.dataLayer = window.dataLayer || [];
+      // function gtag(){dataLayer.push(arguments)};
+      // gtag('js', new Date());
+
+      // gtag('config', 'UA-93366011-2');
+    </script>
+
+  </head>
+  <body>
+      <firebase-app
+      auth-domain="solidification-c323c.firebaseapp.com"
+      database-url="https://solidification-c323c.firebaseio.com"
+      api-key="AIzaSyBEPbPBO83oDSxstDAJvwvlHk5NsFWIhIE"
+      storage-bucket="solidification-c323c.appspot.com"
+      messaging-sender-id="271013074027">
+    </firebase-app>    
+    <solidification-app></solidification-app>
+  </body>
+</html>

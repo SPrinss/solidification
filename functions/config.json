@@ -1,0 +1,14 @@
+{
+  "email_transport": {
+    "service": "Gmail",
+    "auth": {
+      "user": "automaticsolidificationmessage@gmail.com",
+      "pass": "7#Zy%CFhPGpJV4FG"
+    }
+  },
+  "email_from": "solidificationautomaticemail",
+  "email_to": "samprinssen@gmail.com",
+  "email_subject": "Nieuwe memory",
+  "email_message_intro": "Hallo!",
+  "email_message_signature": "<br><br>Ok doei!<br>De bot"
+}

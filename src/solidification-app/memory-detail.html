@@ -1,0 +1,65 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<dom-module id="memory-detail">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --solidification-input: {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 0 16px;
+          border: 2px solid #ddd;
+          color: #333;
+          background-color: white;
+          font-size: 18px;
+          display: block;          
+        };        
+      }
+      textarea {
+        @apply --solidification-input;
+      }
+
+      textarea {
+        height: 108px;
+        resize: none;        
+      }    
+    </style>
+
+    <firebase-document 
+      path="/memories/[[userId]]/[[memoryId]]"
+      data="{{memory}}"
+    ></firebase-document>
+
+    <textarea value="{{memory.text::change}}"></textarea>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+     class MemoryDetail extends Polymer.Element {
+      static get is() { return 'memory-detail'; }
+      static get properties() {
+        return {
+          userId: {
+            type: String
+          },
+
+          memoryId: {
+            type: String
+          },
+
+          memory: {
+            type: Object,
+            value:{}
+          }
+        }
+      }
+    }
+    window.customElements.define(MemoryDetail.is, MemoryDetail);
+  </script>
+</dom-module>

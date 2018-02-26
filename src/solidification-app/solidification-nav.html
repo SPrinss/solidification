@@ -1,0 +1,56 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="solidification-nav">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      nav {
+        align-items: center;
+      }
+
+      ul {
+        list-style: none;
+        display: flex;
+        padding: 0;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      li {
+        display: inline;
+        margin: 0 16px;
+        font-family: 'Karla';
+        color: #333;
+        cursor: pointer;
+      }
+      a {
+        text-decoration: none;
+      }
+      li[aria-selected='true'] {
+        color: red;        
+      }      
+
+    </style>
+
+    <nav>
+      <ul role="tablist">
+          <a href="/"><li id="tab-add" role="tab" aria-controls="section-add">Add</li></a>
+        <a href="/me"><li id="tab-me" role="tab" aria-controls="section-me">Me</li></a>
+      </ul>
+    </nav>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+     class SolidificationNav extends Polymer.Element {
+      static get is() { return 'solidification-nav'; }
+    }
+    window.customElements.define(SolidificationNav.is, SolidificationNav);
+  </script>
+</dom-module>

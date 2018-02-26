@@ -1,0 +1,41 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/solidification-app/solidification-app.html",
+  "fragments": [
+    "src/solidification-app/solidification-app.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "bower.json",
+    "index.html",
+    "bower_components/webcomponentsjs/webcomponents-loader.js"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "images/**/*"
+  ],
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ],
+    "ignoreWarnings": [
+      
+    ]
+  },
+  "builds": [
+    {
+      "name": "bundled",
+      "bundle": true,
+      "js": {
+        "compile": true,
+        "minify": false
+      },
+      "css": {
+        "minify": false
+      },
+      "html": {
+        "minify": false
+      }
+    }
+  ]
+}

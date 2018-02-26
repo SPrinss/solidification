@@ -1,0 +1,15 @@
+{
+  "email_transport": {
+    "service": "Gmail",
+    "auth": {
+      "user": "config.email",
+      "pass": "config.password"
+    }
+  },
+  "email_from": "bot@woutervroege.nl",
+  "email_to": "wouter@woutervroege.nl",
+  "email_subject": "Nieuw bericht op need-words",
+  "email_message_intro": "Hallo Marieke,<br>er heeft iemand contact met je opgenomen op need-words.nl:",
+  "email_message_signature": "<br><br>Ok doei!<br>De bot",
+  "database_ref_trigger": "/messages/{pushId}"
+}

@@ -1,0 +1,110 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="solidification-auth">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --solidification-input: {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 0 16px;
+          border: 2px solid #ddd;
+          color: #333;
+          background-color: white;
+          font-size: 18px;
+          display: block;          
+        }        
+      }
+      input, textarea {
+        @apply --solidification-input;
+      }
+
+      input {
+        height: 54px;
+      }
+      textarea {
+        height: 108px;
+        resize: none;        
+      }
+
+      button {
+        background-color: var(--solidification-main-color);
+        border-radius: 5px;
+        height: 48px;
+        width: 160px;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 0;
+        color: white;
+        margin: 8px 0;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      p {
+        color: lightblue;
+      }              
+    </style>
+
+    <input id="username" type="text" placeholder="email">
+    <input id="password" type="password" placeholder="password">
+
+    <dom-if if="[[!signUp]]">
+    <template>
+      <button
+        label="Sign in"
+        on-click="_handleTapSignSignInButton"
+      >Sign in</button>
+
+      <p on-click="_toggleSignUp">Create an account</p>
+    </template>
+    </dom-if>
+
+    <dom-if if="[[signUp]]">
+    <template>
+      <button
+        label="Sign up"
+        on-click="_handleTapSignUpButton"
+      >Create account</button>
+
+      <p on-click="_toggleSignUp">Already have an account? Sign in</p>
+      
+    </template>
+    </dom-if>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+     class SolidificationAuth extends Polymer.Element {
+      static get is() { return 'solidification-auth'; }
+      static get properties() {
+        return {
+          signUp:{
+            type: Boolean,
+            value: false
+          }
+        }
+      }
+      _toggleSignUp() {
+        this.set('signUp', !this.signUp);
+      }
+
+      _handleTapSignSignInButton() {
+        var user = this.shadowRoot.querySelector('#username').value;
+        var pw = this.shadowRoot.querySelector('#password').value;
+        this.dispatchEvent(new CustomEvent('sign-in-attempt', { detail: {user:user, pw:pw}, bubbles: true, composed: true }));
+      }      
+      _handleTapSignUpButton() {
+        var user = this.shadowRoot.querySelector('#username').value;
+        var pw = this.shadowRoot.querySelector('#password').value;
+        this.dispatchEvent(new CustomEvent('create-user-attempt', { detail: {user:user, pw:pw}, bubbles: true, composed: true }));
+      }
+    }
+
+    window.customElements.define(SolidificationAuth.is, SolidificationAuth);
+  </script>
+</dom-module>

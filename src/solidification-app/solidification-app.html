@@ -1,0 +1,270 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-messaging.html">
+<link rel="import" href="solidification-styles.html">
+<link rel="import" href="solidification-add-memory.html">
+<link rel="import" href="solidification-auth.html">
+
+<dom-module id="solidification-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        align-items: center;
+        -webkit-overflow-scrolling: touch;        
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      solidification-nav {
+        position: fixed;
+        top: 0;
+        height: 50px;
+        width: 100%;
+        background-color: #f0f0f0;        
+      }      
+
+      section {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        max-width: 800px;
+        width: 100%;
+        margin-top: 50px;
+      }
+
+      section[aria-hidden='true'] {
+        display: none;
+      }
+
+      [hidden] {
+        display: none!important;
+      }
+    </style>
+
+    <main>
+      <solidification-nav></solidification-nav>
+
+      <dom-if if="[[_showAuthenticationSection]]">
+        <template>
+        <section>
+          <solidification-auth user="[[user]]" signed-in="[[signedIn]]" on-sign-in-attempt="_handleSignInAttempt" on-create-account-attempt="_handleCreateAccountAttempt" ></solidification-auth>
+        </section>
+        </template>
+      </dom-if>
+
+      <dom-if if="[[addRouteActive]]">
+          <template>
+            <section id="section-add">
+              <solidification-add-memory on-add-memory="_handleAddMemoryEvent"></solidification-add-memory>
+            </section>
+        </template>
+      </dom-if>
+
+      <dom-if if="[[existingMemoryRouteActive]]">
+        <template>
+          <section id="section-existing-memory" aria-labelledby="tab-existing" aria-selected="false">
+            <memory-detail
+            user-id="[[user.uid]]"
+            memory-id="[[memoryRouteData.memoryId]]"
+          ></memory-detail>
+          </section>
+        </template>
+      </dom-if>      
+
+      <dom-if if="[[userRouteActive]]">
+        <template>
+          <section id="section-me" aria-labelledby="tab-me" aria-selected="false" >
+            <solidification-user-settings user-id="[[user.uid]]" signed-in="[[signedIn]]"></solidification-user-settings>
+          </section>      
+        </template>
+      </dom-if>    
+
+    </main>
+    
+    <firebase-messaging 
+      id="messaging"
+      token="{{token}}"
+      on-message="handleMessage">
+    </firebase-messaging>    
+
+    <firebase-auth id="auth" user="{{user}}" signed-in="{{signedIn}}"></firebase-auth>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/" active="{{addRouteActive}}"></app-route>
+    <app-route route="{{route}}" pattern="/memory/:memoryId" data="{{memoryRouteData}}" active="{{existingMemoryRouteActive}}"></app-route>
+    <app-route route="{{route}}" pattern="/me" active="{{userRouteActive}}"></app-route>
+  </template>
+
+  <script>
+   /**
+     * @customElement
+     * @polymer
+     */
+     class SolidificationApp extends Polymer.Element {
+      static get is() { return 'solidification-app'; }
+      static get properties() {
+        return {
+          signedIn: {
+            type: Boolean,
+            value: false,
+            observer: "_handleSignedInChanged"
+          },
+
+          _showAuthenticationSection: {
+            type: Boolean,
+            value: false
+          },
+
+          user: {
+            type: Object
+          },
+
+          showSignup: {
+            type: Boolean,
+            value: false
+          },
+
+          signUp: {
+            type: Boolean,
+            value: false
+          },          
+
+          userData: {
+            type: Object,
+            value: {'token':""}
+          },
+
+          token: {
+            type: String,
+          },
+
+          _showAuthenticationSectionObject: {
+            type: Object
+          },
+
+          existingMemoryRouteActive: {
+            type: Boolean,
+            value: false,
+            observer: '_handleExistingMemoryRouteActiveChanged'            
+          },
+
+          userRouteActive: {
+            type: Boolean,
+            value: false,
+            observer: '_handleUserRouteActiveChanged'
+          },
+
+          addRouteActive: {
+            type: Boolean,
+            value: true
+          }          
+        }
+      }
+      
+      static get observers() {
+        return [        
+          'setTokenInDatabase(token, user.uid)',
+        ]
+      }
+
+      connectedCallback() {
+        super.connectedCallback(); 
+        Polymer.RenderStatus.beforeNextRender(this, function() {
+          this._loadElement('solidification-nav.html')          
+          this._loadElement('../../bower_components/polymerfire/firebase-database-script.html')          
+          this._loadElement('../../bower_components/polymerfire/firebase-auth.html')          
+          this.requestNotificationPermission()
+          this._loadElement('../../bower_components/app-route/app-route.html')
+          this._loadElement('../../bower_components/app-route/app-location.html')
+        })
+      }
+
+      _handleAddMemoryEvent(e) {
+        this.addMemory(e.detail);
+      }
+
+      setTokenInDatabase (token, userId) {
+        if(token && userId) firebase.database().ref().child('users/' + userId + '/token/' + token).set(true);
+      }
+ 
+      requestNotificationPermission () {
+        var self = this;
+        this.shadowRoot.querySelector('firebase-messaging').requestPermission().then(function(token) {
+          // permission was granted
+          self.set('token', token)
+        }, function(err) {
+          console.log('failure')          
+          // permission was denied
+        });
+      }
+
+      handleMessage (evt, message) {
+        console.log(evt, message)
+      }
+
+      _handleSignInAttempt(e){
+        this.shadowRoot.querySelector('#auth').signInWithEmailAndPassword(e.detail.user, e.detail.pw);
+      }
+
+      _handleCreateAccountAttempt(e){
+        this.shadowRoot.querySelector('#auth').createUserWithEmailAndPassword(e.detail.user, e.detail.pw);
+      }
+
+      addMemory (newMemoryText) {
+        if(!newMemoryText) return;
+        var newMemory = {};
+        newMemory.text = newMemoryText;
+        newMemory.dateAdded = this._getCurrentTime();
+        
+        var newMemoryKey = firebase.database().ref().child('memories').push().key;
+        var updates = {};  
+        updates['/memories/' + this.user.uid + '/' + newMemoryKey] = newMemory;
+
+        var self = this;
+        return firebase.database().ref().update(updates).then(
+          self.shadowRoot.querySelector('solidification-add-memory')._showMemoryStorageSuccesful()
+        );  
+      }
+
+      _getCurrentTime(){
+        var d = new Date();
+        return d.getTime();
+      }
+
+      _handleSignedInChanged (signedIn) {
+        if(!signedIn) return this._startShowAuthSectionTimer()
+        window.clearTimeout(this._showAuthenticationSectionObject);        
+        this.set('_showAuthenticationSection', false) 
+      }
+
+      _startShowAuthSectionTimer(){
+        window.clearTimeout(this._showAuthenticationSectionObject);
+        this._showAuthenticationSectionObject = window.setTimeout((function() {
+          this.set('_showAuthenticationSection', true)
+        }).bind(this), 750);        
+      }
+
+      _handleUserRouteActiveChanged(userRouteActive){
+        if(userRouteActive) this._loadElement('solidification-user-settings.html')
+      }
+      _handleExistingMemoryRouteActiveChanged(existingMemoryRouteActive){
+        if(existingMemoryRouteActive) this._loadElement('memory-detail.html')
+      }
+
+      _loadElement(element){
+        Polymer.importHref(this.resolveUrl(element), null, null, true);
+      }
+
+    }
+
+    window.customElements.define(SolidificationApp.is, SolidificationApp);
+  </script>
+</dom-module>

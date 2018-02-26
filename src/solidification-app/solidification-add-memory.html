@@ -1,0 +1,109 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="solidification-add-memory">
+  <template>
+    <style>
+      :host {
+        display: block;
+        --solidification-input: {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 0 16px;
+          border: 2px solid #ddd;
+          color: #333;
+          background-color: white;
+          font-size: 18px;
+          display: block;          
+          }
+        }
+
+        #add-memory-container {
+          max-width: 300px;
+          margin: 16px;
+        }
+
+        input, textarea {
+          @apply --solidification-input;
+        }
+
+        input {
+          height: 54px;
+        }
+        textarea {
+          height: 108px;
+          resize: none;        
+        }
+
+        button {
+          /* background-color: var(--highlight-color); */
+          border-radius: 5px;
+          height: 48px;
+          width: 160px;
+          padding: 10px;
+          box-sizing: border-box;
+          border: 0;
+          color: white;
+          margin: 8px 0;
+          font-size: 14px;
+          cursor: pointer;
+        }                      
+      }
+      p {
+        font-size: 8px;
+        color: darkgoldenrod;
+        margin: 4px;
+      }
+      [hidden] {
+        display: none!important;
+      }
+    </style>
+
+    <div id="add-memory-container">
+      <textarea rows="4" value="{{newMemory::change}}"></textarea>
+      <button on-click="addMemory">Enter memory</button>
+      <p hidden$="[[!_showSuccesMessage]]">Succesfully added!</p>      
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+     class SolidificationAddMemory extends Polymer.Element {
+      static get is() { return 'solidification-add-memory'; }
+      static get properties() {
+        return {
+          newMemory: {
+            type: String
+          },
+          succesMessageTimer: {
+            type: Object
+          },
+          _showSuccesMessage: {
+            type: Boolean,
+            value: false
+          }
+        }
+      }
+      addMemory() {
+        var newMemory = this.newMemory;
+        this.dispatchEvent(new CustomEvent('add-memory', { detail: newMemory, bubbles: true, composed: true }));
+        this.set('newMemory', '')
+      }
+      _showMemoryStorageSuccesful(){
+        this.set('_showSuccesMessage', true)        
+        this._startShowSuccesMessageTimer()
+      }
+
+      _startShowSuccesMessageTimer(){
+        window.clearTimeout(this.succesMessageTimer);
+        this.succesMessageTimer = window.setTimeout((function() {
+          this.set('_showSuccesMessage', false);
+        }).bind(this), 1250);        
+      }
+    }
+    window.customElements.define(SolidificationAddMemory.is, SolidificationAddMemory);
+  </script>
+</dom-module>
